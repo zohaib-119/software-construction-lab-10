@@ -12,19 +12,24 @@ public class Constant implements Expression {
 
     @Override
     public String toString() {
-        return String.valueOf(value);
+        return Double.toString(value);
     }
 
     @Override
     public boolean equals(Object that) {
         if (this == that) return true;
         if (that == null || getClass() != that.getClass()) return false;
-        Constant constant = (Constant) that;
-        return Double.compare(constant.value, value) == 0;
+        Constant thatConst = (Constant) that;
+        return Double.compare(thatConst.value, value) == 0;
     }
 
     @Override
     public int hashCode() {
         return Double.hashCode(value);
+    }
+
+    @Override
+    public double evaluate() {
+        return value;
     }
 }

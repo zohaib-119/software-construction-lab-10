@@ -9,90 +9,136 @@ import org.junit.Test;
  */
 public class ExpressionTest {
 
-    // Test the toString() method for various types of expressions
+    // Tests for Constant
     @Test
-    public void testToStringConstant() {
-        Expression expr = new Constant(5.0);
-        assertEquals("5.0", expr.toString());
+    public void testConstantEvaluate() {
+        Constant constant = new Constant(5.0);
+        assertEquals(5.0, constant.evaluate(), 0.001);
     }
 
     @Test
-    public void testToStringVariable() {
-        Expression expr = new Variable("x");
-        assertEquals("x", expr.toString());
+    public void testConstantToString() {
+        Constant constant = new Constant(5.0);
+        assertEquals("5.0", constant.toString());
     }
 
     @Test
-    public void testToStringBinaryOperation() {
-        Expression expr = new BinaryOperation(new Variable("x"), new Constant(5.0), "+");
-        assertEquals("(x + 5.0)", expr.toString());
+    public void testConstantEquality() {
+        Constant constant1 = new Constant(5.0);
+        Constant constant2 = new Constant(5.0);
+        Constant constant3 = new Constant(10.0);
+        assertTrue(constant1.equals(constant2));
+        assertFalse(constant1.equals(constant3));
     }
 
     @Test
-    public void testToStringComplexExpression() {
-        Expression expr = new BinaryOperation(
-            new BinaryOperation(new Variable("x"), new Constant(3.0), "+"),
-            new Variable("y"),
-            "*"
-        );
-        assertEquals("((x + 3.0) * y)", expr.toString());
+    public void testConstantHashCode() {
+        Constant constant1 = new Constant(5.0);
+        Constant constant2 = new Constant(5.0);
+        assertEquals(constant1.hashCode(), constant2.hashCode());
     }
 
-    // Test the equals() method for structural equality
+    // Tests for Variable
     @Test
-    public void testEqualsConstant() {
-        Expression expr1 = new Constant(5.0);
-        Expression expr2 = new Constant(5.0);
-        assertTrue(expr1.equals(expr2));
+    public void testVariableEvaluate() {
+        Variable x = new Variable(5.0);
+        assertEquals(5.0, x.evaluate(), 0.001);
     }
 
     @Test
-    public void testEqualsVariable() {
-        Expression expr1 = new Variable("x");
-        Expression expr2 = new Variable("x");
-        assertTrue(expr1.equals(expr2));
+    public void testVariableToString() {
+        Variable x = new Variable(5.0);
+        assertEquals("5.0", x.toString());
     }
 
     @Test
-    public void testEqualsBinaryOperation() {
-        Expression expr1 = new BinaryOperation(new Variable("x"), new Constant(5.0), "+");
-        Expression expr2 = new BinaryOperation(new Variable("x"), new Constant(5.0), "+");
-        assertTrue(expr1.equals(expr2));
+    public void testVariableSetValue() {
+        Variable x = new Variable(5.0);
+        x.setValue(10.0);
+        assertEquals(10.0, x.evaluate(), 0.001);
     }
 
     @Test
-    public void testEqualsDifferentOperators() {
-        Expression expr1 = new BinaryOperation(new Variable("x"), new Constant(5.0), "+");
-        Expression expr2 = new BinaryOperation(new Variable("x"), new Constant(5.0), "*");
-        assertFalse(expr1.equals(expr2));
+    public void testVariableEquality() {
+        Variable x = new Variable(5.0);
+        Variable y = new Variable(5.0);
+        Variable z = new Variable(10.0);
+        assertTrue(x.equals(y));
+        assertFalse(x.equals(z));
     }
 
-    // Test hashCode() for consistent hashing
+    // Tests for Addition
     @Test
-    public void testHashCodeConstant() {
-        Expression expr1 = new Constant(5.0);
-        Expression expr2 = new Constant(5.0);
-        assertEquals(expr1.hashCode(), expr2.hashCode());
-    }
-
-    @Test
-    public void testHashCodeVariable() {
-        Expression expr1 = new Variable("x");
-        Expression expr2 = new Variable("x");
-        assertEquals(expr1.hashCode(), expr2.hashCode());
+    public void testAdditionEvaluate() {
+        Variable x = new Variable(5.0);
+        Variable y = new Variable(10.0);
+        Addition addition = new Addition(x, y);
+        assertEquals(15.0, addition.evaluate(), 0.001);
     }
 
     @Test
-    public void testHashCodeBinaryOperation() {
-        Expression expr1 = new BinaryOperation(new Variable("x"), new Constant(5.0), "+");
-        Expression expr2 = new BinaryOperation(new Variable("x"), new Constant(5.0), "+");
-        assertEquals(expr1.hashCode(), expr2.hashCode());
+    public void testAdditionToString() {
+        Variable x = new Variable(5.0);
+        Variable y = new Variable(10.0);
+        Addition addition = new Addition(x, y);
+        assertEquals("(5.0 + 10.0)", addition.toString());
     }
 
     @Test
-    public void testHashCodeDifferentOperators() {
-        Expression expr1 = new BinaryOperation(new Variable("x"), new Constant(5.0), "+");
-        Expression expr2 = new BinaryOperation(new Variable("x"), new Constant(5.0), "*");
-        assertNotEquals(expr1.hashCode(), expr2.hashCode());
+    public void testAdditionEquality() {
+        Variable x = new Variable(5.0);
+        Variable y = new Variable(10.0);
+        Addition addition1 = new Addition(x, y);
+        Addition addition2 = new Addition(x, y);
+        Addition addition3 = new Addition(y, x);
+        assertTrue(addition1.equals(addition2));
+        assertFalse(addition1.equals(addition3)); // Order of operands matters
+    }
+
+    @Test
+    public void testAdditionHashCode() {
+        Variable x = new Variable(5.0);
+        Variable y = new Variable(10.0);
+        Addition addition1 = new Addition(x, y);
+        Addition addition2 = new Addition(x, y);
+        assertEquals(addition1.hashCode(), addition2.hashCode());
+    }
+
+    // Tests for Multiplication
+    @Test
+    public void testMultiplicationEvaluate() {
+        Variable x = new Variable(5.0);
+        Constant two = new Constant(2.0);
+        Multiplication multiplication = new Multiplication(x, two);
+        assertEquals(10.0, multiplication.evaluate(), 0.001);
+    }
+
+    @Test
+    public void testMultiplicationToString() {
+        Variable x = new Variable(5.0);
+        Constant two = new Constant(2.0);
+        Multiplication multiplication = new Multiplication(x, two);
+        assertEquals("(5.0 * 2.0)", multiplication.toString());
+    }
+
+    @Test
+    public void testMultiplicationEquality() {
+        Variable x = new Variable(5.0);
+        Constant two = new Constant(2.0);
+        Multiplication mul1 = new Multiplication(x, two);
+        Multiplication mul2 = new Multiplication(x, two);
+        Variable y = new Variable(10.0);
+        Multiplication mul3 = new Multiplication(y, two);
+        assertTrue(mul1.equals(mul2));
+        assertFalse(mul1.equals(mul3));
+    }
+
+    @Test
+    public void testMultiplicationHashCode() {
+        Variable x = new Variable(5.0);
+        Constant two = new Constant(2.0);
+        Multiplication mul1 = new Multiplication(x, two);
+        Multiplication mul2 = new Multiplication(x, two);
+        assertEquals(mul1.hashCode(), mul2.hashCode());
     }
 }
